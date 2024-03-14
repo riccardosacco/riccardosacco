@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   return new Response(null, {
     status: 307,
     headers: {
-      Location: `/?id=${resume.id}`,
+      Location: `/resume?id=${resume.id}`,
     },
   });
 }
