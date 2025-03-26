@@ -157,7 +157,7 @@ export default async function Resume({ id }: ResumeProps) {
                         <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
                           {experience.company}
                         </div>
-                        <div className="text-sm text-slate-400 @2xl:text-xs">
+                        <div className="text-sm text-slate-500 @2xl:text-xs">
                           <span>{start_date.format(date_format)}</span>
                           <span> - </span>
                           <span>
@@ -195,7 +195,7 @@ export default async function Resume({ id }: ResumeProps) {
                         <div className="text-lg font-semibold @2xl:text-base">
                           {project.title}
                         </div>
-                        <div className="text-sm text-slate-400 @2xl:text-xs">
+                        <div className="text-sm text-slate-500 @2xl:text-xs">
                           {project.subtitle}
                         </div>
                       </div>
@@ -236,7 +236,7 @@ export default async function Resume({ id }: ResumeProps) {
                                 </div>
                               )}
 
-                              <div className="text-base text-slate-500 @2xl:text-sm">
+                              <div className="text-sm text-slate-500 @2xl:text-sm">
                                 {skill.title}
                               </div>
                             </div>
@@ -278,7 +278,7 @@ export default async function Resume({ id }: ResumeProps) {
                         <div className="text-sm font-medium text-[#FB513B] @2xl:text-xs">
                           {education.school}
                         </div>
-                        <div className="text-xs text-slate-400">
+                        <div className="text-xs text-slate-500">
                           <span>{start_year}</span>
                           {end_year && (
                             <>
@@ -315,7 +315,7 @@ export default async function Resume({ id }: ResumeProps) {
                         <span className="font-medium @2xl:text-sm">
                           {language.language}
                         </span>
-                        <span className="text-sm text-slate-400 @2xl:text-xs">
+                        <span className="text-sm text-slate-500 @2xl:text-xs">
                           ({language.level})
                         </span>
                       </div>
