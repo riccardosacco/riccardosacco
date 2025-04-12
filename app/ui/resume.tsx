@@ -37,8 +37,8 @@ export default async function Resume({ id }: ResumeProps) {
 
   const skillsGrouped = groupBy(skills, (skill) => skill.type || "");
   return (
-    <div className="mx-auto max-w-[21cm] border border-slate-200 bg-white @container @2xl:h-[29.7cm] @2xl:max-h-[29.7cm] print:fixed print:inset-0 print:border-none">
-      <div className="flex flex-col justify-between gap-y-2 px-6 py-6 @2xl:px-10 @2xl:py-8">
+    <div className="mx-auto max-w-[21cm] border border-slate-200 bg-white @container @2xl:h-[29.7cm] @2xl:max-h-[29.7cm] print:inset-0 print:border-none">
+      <div className="flex flex-col justify-between gap-y-2 px-6 py-6 @2xl:px-10 @2xl:py-8 print:px-0 print:py-0">
         <div className="space-y-4">
           <div className="flex flex-col justify-between gap-2 @2xl:flex-row">
             <div>
@@ -99,7 +99,7 @@ export default async function Resume({ id }: ResumeProps) {
           <div className="flex flex-col items-center justify-between gap-4 @lg:flex-row">
             <div className="hidden min-h-28 min-w-28 @lg:block">
               <Image
-                src={`http://localhost:8055/assets/${resume.image}`}
+                src={`https://api.riccardosacco.com/assets/${resume.image}`}
                 alt={`${resume.firstname} ${resume.lastname}`}
                 width={128}
                 height={128}
@@ -125,7 +125,7 @@ export default async function Resume({ id }: ResumeProps) {
                   const end_date =
                     experience.end_date && dayjs(experience.end_date);
 
-                  const date_format = "MMMM YYYY";
+                  const date_format = "MM.YYYY";
 
                   let duration_months = end_date
                     ? end_date.diff(start_date, "months")
@@ -137,35 +137,58 @@ export default async function Resume({ id }: ResumeProps) {
                   return (
                     <div
                       key={experience.id}
-                      className="flex items-center gap-x-4"
+                      className="flex items-start gap-x-4"
                     >
-                      <div className="min-h-14 min-w-14 overflow-hidden rounded-lg">
+                      <div className="min-h-10 min-w-10 overflow-hidden rounded-lg">
                         <a href={experience.link || undefined} target="_blank">
                           <Image
-                            src={`http://localhost:8055/assets/${experience.icon}`}
+                            src={`https://api.riccardosacco.com/assets/${experience.icon}`}
                             alt={`${experience.company}`}
-                            width={56}
-                            height={56}
+                            width={40}
+                            height={40}
                             quality={100}
                           />
                         </a>
                       </div>
-                      <div>
-                        <div className="text-lg font-semibold @2xl:text-base">
-                          {experience.title}
+                      <div className="flex-1">
+                        <div className="flex flex-col justify-between @2xl:flex-row @2xl:items-start">
+                          <div>
+                            <div className="text-lg font-semibold @2xl:text-base">
+                              {experience.title}
+                            </div>
+                            <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
+                              {experience.company}
+                            </div>
+                          </div>
+                          <div className="text-sm text-slate-500 @2xl:text-right @2xl:text-xs">
+                            <div>
+                              <span>{start_date.format(date_format)}</span>
+                              <span> – </span>
+                              <span>
+                                {end_date
+                                  ? end_date.format(date_format)
+                                  : "present"}
+                              </span>
+                            </div>
+                            <div className="text-[11px] text-slate-400">
+                              {end_date &&
+                                duration_years > 0 &&
+                                `${duration_years} year${duration_years > 1 ? "s" : ""}`}
+                              {end_date &&
+                                duration_years > 0 &&
+                                duration_months > 0 &&
+                                " "}
+                              {end_date &&
+                                duration_months > 0 &&
+                                `${duration_months} month${duration_months > 1 ? "s" : ""}`}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
-                          {experience.company}
-                        </div>
-                        <div className="text-sm text-slate-500 @2xl:text-xs">
-                          <span>{start_date.format(date_format)}</span>
-                          <span> - </span>
-                          <span>
-                            {end_date
-                              ? end_date.format(date_format)
-                              : "present"}
-                          </span>
-                        </div>
+                        {experience.description && (
+                          <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
+                            {parse(experience.description)}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -179,14 +202,14 @@ export default async function Resume({ id }: ResumeProps) {
               <div className="space-y-3">
                 {projects.map((project) => {
                   return (
-                    <div key={project.id} className="flex items-center gap-x-4">
-                      <div className="flex min-h-14 min-w-14 items-center justify-center overflow-hidden rounded-lg">
+                    <div key={project.id} className="flex items-start gap-x-4">
+                      <div className="flex min-h-10 min-w-10 items-center justify-center overflow-hidden rounded-lg">
                         <a href={project.link || undefined} target="_blank">
                           <Image
-                            src={`http://localhost:8055/assets/${project.icon}`}
+                            src={`https://api.riccardosacco.com/assets/${project.icon}`}
                             alt={`${project.title}`}
-                            width={56}
-                            height={56}
+                            width={40}
+                            height={40}
                             quality={100}
                           />
                         </a>
@@ -198,6 +221,11 @@ export default async function Resume({ id }: ResumeProps) {
                         <div className="text-sm text-slate-500 @2xl:text-xs">
                           {project.subtitle}
                         </div>
+                        {project.description && (
+                          <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
+                            {parse(project.description)}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -215,10 +243,10 @@ export default async function Resume({ id }: ResumeProps) {
                 {Object.entries(skillsGrouped).map(([type, skills]) => {
                   return (
                     <div key={type}>
-                      <div className="text-base font-semibold capitalize @2xl:text-sm">
+                      <div className="space-y-1 text-base font-semibold capitalize @2xl:text-sm">
                         {type}
                       </div>
-                      <div className="">
+                      <div className="space-y-0.5">
                         {skills.map((skill) => {
                           return (
                             <div
@@ -228,7 +256,7 @@ export default async function Resume({ id }: ResumeProps) {
                               {skill.icon && (
                                 <div>
                                   <Image
-                                    src={`http://localhost:8055/assets/${skill.icon}`}
+                                    src={`https://api.riccardosacco.com/assets/${skill.icon}`}
                                     alt={`${skill.title}`}
                                     width={16}
                                     height={16}
@@ -236,7 +264,7 @@ export default async function Resume({ id }: ResumeProps) {
                                 </div>
                               )}
 
-                              <div className="text-sm text-slate-500 @2xl:text-sm">
+                              <div className="text-sm text-slate-500 @2xl:text-xs">
                                 {skill.title}
                               </div>
                             </div>
@@ -260,13 +288,13 @@ export default async function Resume({ id }: ResumeProps) {
                       key={education.id}
                       className="flex items-center gap-x-3"
                     >
-                      <div className="min-h-12 min-w-12">
+                      <div className="min-h-10 min-w-10">
                         <a href={education.link || undefined} target="_blank">
                           <Image
-                            src={`http://localhost:8055/assets/${education.icon}`}
+                            src={`https://api.riccardosacco.com/assets/${education.icon}`}
                             alt={`${education.school}`}
-                            width={48}
-                            height={48}
+                            width={40}
+                            height={40}
                             quality={100}
                           />
                         </a>
@@ -305,7 +333,7 @@ export default async function Resume({ id }: ResumeProps) {
                     >
                       <div className="min-h-5 min-w-5">
                         <Image
-                          src={`http://localhost:8055/assets/${language.icon}`}
+                          src={`https://api.riccardosacco.com/assets/${language.icon}`}
                           alt={`${language.language}`}
                           width={20}
                           height={20}
@@ -332,7 +360,7 @@ export default async function Resume({ id }: ResumeProps) {
               <div key={social.id} className="min-h-7 min-w-7">
                 <a href={social.link || "#"} target="_blank" rel="noreferrer">
                   <Image
-                    src={`http://localhost:8055/assets/${social.icon}`}
+                    src={`https://api.riccardosacco.com/assets/${social.icon}`}
                     alt={`${social.name}`}
                     width={28}
                     height={28}
