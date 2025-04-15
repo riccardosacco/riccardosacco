@@ -165,7 +165,7 @@ export default function Home() {
           <div className="grid gap-8 md:grid-cols-2">
             <div>
               <p className="mb-8 text-xl">
-                I'm always open to discussing new projects, creative ideas or
+                Im always open to discussing new projects, creative ideas or
                 opportunities to be part of your vision.
               </p>
               <div className="space-y-4">
