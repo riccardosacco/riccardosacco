@@ -15,7 +15,7 @@ export async function getExperiences(resume_id: string) {
     readItems("experiences", {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
       sort: ["sort"],
-    })
+    }),
   );
 }
 
@@ -24,7 +24,7 @@ export async function getProjects(resume_id: string) {
     readItems("projects", {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
       sort: ["sort"],
-    })
+    }),
   );
 }
 export async function getSkills(resume_id: string) {
@@ -33,7 +33,7 @@ export async function getSkills(resume_id: string) {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
 
       sort: ["sort"],
-    })
+    }),
   );
 }
 
@@ -42,7 +42,7 @@ export async function getEducations(resume_id: string) {
     readItems("education", {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
       sort: ["sort"],
-    })
+    }),
   );
 }
 
@@ -51,7 +51,7 @@ export async function getLanguages(resume_id: string) {
     readItems("languages", {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
       sort: ["sort"],
-    })
+    }),
   );
 }
 
@@ -60,6 +60,15 @@ export async function getSocials(resume_id: string) {
     readItems("social", {
       filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
       sort: ["sort"],
-    })
+    }),
+  );
+}
+
+export async function getCertifications(resume_id: string) {
+  return await directus.request(
+    readItems("certifications", {
+      filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
+      sort: ["sort"],
+    }),
   );
 }

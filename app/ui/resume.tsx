@@ -13,6 +13,7 @@ import {
   getProjects,
   getSkills,
   getSocials,
+  getCertifications,
 } from "@/app/lib/api/resume";
 
 import { FaPhone, FaEnvelope, FaGlobe } from "react-icons/fa6";
@@ -34,6 +35,7 @@ export default async function Resume({ id }: ResumeProps) {
   const educations = await getEducations(resume.id);
   const languages = await getLanguages(resume.id);
   const socials = await getSocials(resume.id);
+  const certifications = await getCertifications(resume.id);
 
   const skillsGrouped = groupBy(skills, (skill) => skill.type || "");
   return (
@@ -97,7 +99,7 @@ export default async function Resume({ id }: ResumeProps) {
             </div>
           </div>
           <div className="flex flex-col items-center justify-between gap-4 @lg:flex-row">
-            <div className="hidden min-h-28 min-w-28 @lg:block">
+            <div className="hidden min-h-28 min-w-28 overflow-hidden rounded-full @lg:block">
               <Image
                 src={`https://api.riccardosacco.com/assets/${resume.image}`}
                 alt={`${resume.firstname} ${resume.lastname}`}
@@ -118,242 +120,315 @@ export default async function Resume({ id }: ResumeProps) {
           <div className="space-y-4">
             <div className="space-y-2">
               {/* Experiences */}
-              <div className="text-xl font-semibold">Experiences</div>
-              <div className="space-y-3">
-                {experiences.map((experience) => {
-                  const start_date = dayjs(experience.start_date);
-                  const end_date =
-                    experience.end_date && dayjs(experience.end_date);
+              {experiences.length > 0 && (
+                <>
+                  <div className="text-xl font-semibold">Experiences</div>
+                  <div className="space-y-3">
+                    {experiences.map((experience) => {
+                      const start_date = dayjs(experience.start_date);
+                      const end_date =
+                        experience.end_date && dayjs(experience.end_date);
 
-                  const date_format = "MM.YYYY";
+                      const date_format = "MM.YYYY";
 
-                  let duration_months = end_date
-                    ? end_date.diff(start_date, "months")
-                    : dayjs().diff(start_date, "months");
+                      let duration_months = end_date
+                        ? end_date.diff(start_date, "months")
+                        : dayjs().diff(start_date, "months");
 
-                  const duration_years = Math.floor(duration_months / 12);
-                  duration_months -= duration_years * 12;
+                      const duration_years = Math.floor(duration_months / 12);
+                      duration_months -= duration_years * 12;
 
-                  return (
-                    <div
-                      key={experience.id}
-                      className="flex items-start gap-x-4"
-                    >
-                      <div className="min-h-10 min-w-10 overflow-hidden rounded-lg">
-                        <a href={experience.link || undefined} target="_blank">
-                          <Image
-                            src={`https://api.riccardosacco.com/assets/${experience.icon}`}
-                            alt={`${experience.company}`}
-                            width={40}
-                            height={40}
-                            quality={100}
-                          />
-                        </a>
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex flex-col justify-between @2xl:flex-row @2xl:items-start">
-                          <div>
-                            <div className="text-lg font-semibold @2xl:text-base">
-                              {experience.title}
+                      return (
+                        <div
+                          key={experience.id}
+                          className="flex items-start gap-x-4"
+                        >
+                          {experience.icon && (
+                            <div className="min-h-10 min-w-10 overflow-hidden rounded-lg">
+                              <a
+                                href={experience.link || undefined}
+                                target="_blank"
+                              >
+                                <Image
+                                  src={`https://api.riccardosacco.com/assets/${experience.icon}`}
+                                  alt={`${experience.company}`}
+                                  width={40}
+                                  height={40}
+                                  quality={100}
+                                />
+                              </a>
                             </div>
-                            <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
-                              {experience.company}
+                          )}
+                          <div className="flex-1">
+                            <div className="flex flex-col justify-between @2xl:flex-row @2xl:items-start">
+                              <div>
+                                <div className="text-lg font-semibold @2xl:text-base">
+                                  {experience.title}
+                                </div>
+                                <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
+                                  {experience.company}
+                                </div>
+                              </div>
+                              <div className="text-sm text-slate-500 @2xl:text-right @2xl:text-xs">
+                                <div>
+                                  <span>{start_date.format(date_format)}</span>
+                                  <span> – </span>
+                                  <span>
+                                    {end_date
+                                      ? end_date.format(date_format)
+                                      : "present"}
+                                  </span>
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  {end_date &&
+                                    duration_years > 0 &&
+                                    `${duration_years} year${duration_years > 1 ? "s" : ""}`}
+                                  {end_date &&
+                                    duration_years > 0 &&
+                                    duration_months > 0 &&
+                                    " "}
+                                  {end_date &&
+                                    duration_months > 0 &&
+                                    `${duration_months} month${duration_months > 1 ? "s" : ""}`}
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          <div className="text-sm text-slate-500 @2xl:text-right @2xl:text-xs">
-                            <div>
-                              <span>{start_date.format(date_format)}</span>
-                              <span> – </span>
-                              <span>
-                                {end_date
-                                  ? end_date.format(date_format)
-                                  : "present"}
-                              </span>
-                            </div>
-                            <div className="text-[11px] text-slate-400">
-                              {end_date &&
-                                duration_years > 0 &&
-                                `${duration_years} year${duration_years > 1 ? "s" : ""}`}
-                              {end_date &&
-                                duration_years > 0 &&
-                                duration_months > 0 &&
-                                " "}
-                              {end_date &&
-                                duration_months > 0 &&
-                                `${duration_months} month${duration_months > 1 ? "s" : ""}`}
-                            </div>
+                            {experience.description && (
+                              <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
+                                {parse(experience.description)}
+                              </div>
+                            )}
                           </div>
                         </div>
-                        {experience.description && (
-                          <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
-                            {parse(experience.description)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
 
-            <div className="space-y-2">
-              {/* Projects */}
-              <div className="text-xl font-semibold">Projects</div>
-              <div className="space-y-3">
-                {projects.map((project) => {
-                  return (
-                    <div key={project.id} className="flex items-start gap-x-4">
-                      <div className="flex min-h-10 min-w-10 items-center justify-center overflow-hidden rounded-lg">
-                        <a href={project.link || undefined} target="_blank">
-                          <Image
-                            src={`https://api.riccardosacco.com/assets/${project.icon}`}
-                            alt={`${project.title}`}
-                            width={40}
-                            height={40}
-                            quality={100}
-                          />
-                        </a>
-                      </div>
-                      <div>
-                        <div className="text-lg font-semibold @2xl:text-base">
-                          {project.title}
+            {projects.length > 0 && (
+              <div className="space-y-2">
+                {/* Projects */}
+                <div className="text-xl font-semibold">Projects</div>
+                <div className="space-y-3">
+                  {projects.map((project) => {
+                    return (
+                      <div
+                        key={project.id}
+                        className="flex items-start gap-x-4"
+                      >
+                        <div className="flex min-h-10 min-w-10 items-center justify-center overflow-hidden rounded-lg">
+                          <a href={project.link || undefined} target="_blank">
+                            <Image
+                              src={`https://api.riccardosacco.com/assets/${project.icon}`}
+                              alt={`${project.title}`}
+                              width={40}
+                              height={40}
+                              quality={100}
+                            />
+                          </a>
                         </div>
-                        <div className="text-sm text-slate-500 @2xl:text-xs">
-                          {project.subtitle}
-                        </div>
-                        {project.description && (
-                          <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
-                            {parse(project.description)}
+                        <div>
+                          <div className="text-lg font-semibold @2xl:text-base">
+                            {project.title}
                           </div>
-                        )}
+                          <div className="text-sm text-slate-500 @2xl:text-xs">
+                            {project.subtitle}
+                          </div>
+                          {project.description && (
+                            <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
+                              {parse(project.description)}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right */}
           <div className="space-y-2">
             {/* Skills */}
-            <div className="space-y-1">
-              <div className="text-xl font-semibold">Skills</div>
-              <div className="space-y-2">
-                {Object.entries(skillsGrouped).map(([type, skills]) => {
-                  return (
-                    <div key={type}>
-                      <div className="space-y-1 text-base font-semibold capitalize @2xl:text-sm">
-                        {type}
-                      </div>
-                      <div className="space-y-0.5">
-                        {skills.map((skill) => {
-                          return (
-                            <div
-                              key={skill.id}
-                              className="flex items-center gap-x-2"
-                            >
-                              {skill.icon && (
-                                <div>
-                                  <Image
-                                    src={`https://api.riccardosacco.com/assets/${skill.icon}`}
-                                    alt={`${skill.title}`}
-                                    width={16}
-                                    height={16}
-                                  />
-                                </div>
-                              )}
+            {Object.keys(skillsGrouped).length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Skills</div>
+                <div className="space-y-2">
+                  {Object.entries(skillsGrouped).map(([type, skills]) => {
+                    return (
+                      <div key={type}>
+                        <div className="space-y-1 text-base font-semibold capitalize @2xl:text-sm">
+                          {type}
+                        </div>
+                        <div className="space-y-0.5">
+                          {skills.map((skill) => {
+                            return (
+                              <div
+                                key={skill.id}
+                                className="flex items-center gap-x-2"
+                              >
+                                {skill.icon && (
+                                  <div>
+                                    <Image
+                                      src={`https://api.riccardosacco.com/assets/${skill.icon}`}
+                                      alt={`${skill.title}`}
+                                      width={16}
+                                      height={16}
+                                    />
+                                  </div>
+                                )}
 
-                              <div className="text-sm text-slate-500 @2xl:text-xs">
-                                {skill.title}
+                                <div className="text-sm text-slate-500 @2xl:text-xs">
+                                  {skill.title}
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
             {/* Education */}
-            <div className="space-y-1">
-              <div className="text-xl font-semibold">Education</div>
-              <div className="space-y-2">
-                {educations.map((education) => {
-                  const start_year = dayjs(education.start_date).format("YYYY");
-                  const end_year = dayjs(education.end_date).format("YYYY");
-                  return (
-                    <div
-                      key={education.id}
-                      className="flex items-center gap-x-3"
-                    >
-                      <div className="min-h-10 min-w-10">
-                        <a href={education.link || undefined} target="_blank">
-                          <Image
-                            src={`https://api.riccardosacco.com/assets/${education.icon}`}
-                            alt={`${education.school}`}
-                            width={40}
-                            height={40}
-                            quality={100}
-                          />
-                        </a>
+            {educations.length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Education</div>
+                <div className="space-y-2">
+                  {educations.map((education) => {
+                    const start_year = dayjs(education.start_date).format(
+                      "YYYY",
+                    );
+                    const end_year = dayjs(education.end_date).format("YYYY");
+                    return (
+                      <div
+                        key={education.id}
+                        className="flex items-center gap-x-3"
+                      >
+                        {education.icon && (
+                          <div className="min-h-10 min-w-10">
+                            <a
+                              href={education.link || undefined}
+                              target="_blank"
+                            >
+                              <Image
+                                src={`https://api.riccardosacco.com/assets/${education.icon}`}
+                                alt={`${education.school}`}
+                                width={40}
+                                height={40}
+                                quality={100}
+                              />
+                            </a>
+                          </div>
+                        )}
+                        <div>
+                          <div className="text-base font-semibold @2xl:text-sm">
+                            {education.degree}
+                          </div>
+                          <div className="text-sm font-medium text-[#FB513B] @2xl:text-xs">
+                            {education.school}
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            <span>{start_year}</span>
+                            {end_year && (
+                              <>
+                                <span> - </span>
+                                <span>{end_year}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-base font-semibold @2xl:text-sm">
-                          {education.degree}
-                        </div>
-                        <div className="text-sm font-medium text-[#FB513B] @2xl:text-xs">
-                          {education.school}
-                        </div>
-                        <div className="text-xs text-slate-500">
-                          <span>{start_year}</span>
-                          {end_year && (
-                            <>
-                              <span> - </span>
-                              <span>{end_year}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Certifications */}
+            {certifications.length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Certifications</div>
+                <div className="space-y-2">
+                  {certifications.map((certification) => {
+                    const date = dayjs(certification.date).format("YYYY");
+                    return (
+                      <div
+                        key={certification.id}
+                        className="flex items-center gap-x-3"
+                      >
+                        {certification.icon && (
+                          <div className="min-h-10 min-w-10">
+                            <a
+                              href={certification.link || undefined}
+                              target="_blank"
+                            >
+                              <Image
+                                src={`https://api.riccardosacco.com/assets/${certification.icon}`}
+                                alt={`${certification.title}`}
+                                width={40}
+                                height={40}
+                                quality={100}
+                              />
+                            </a>
+                          </div>
+                        )}
+                        <div>
+                          <div className="text-base font-semibold @2xl:text-sm">
+                            {certification.title}
+                          </div>
+                          <div className="text-sm font-medium text-[#FB513B] @2xl:text-xs">
+                            {certification.company}
+                          </div>
+                          <div className="text-xs text-slate-500">{date}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Languages */}
-            <div className="space-y-1">
-              <div className="text-xl font-semibold">Languages</div>
-              <div className="space-y-1 @2xl:space-y-0">
-                {languages.map((language) => {
-                  return (
-                    <div
-                      key={language.id}
-                      className="flex items-center gap-x-2"
-                    >
-                      <div className="min-h-5 min-w-5">
-                        <Image
-                          src={`https://api.riccardosacco.com/assets/${language.icon}`}
-                          alt={`${language.language}`}
-                          width={20}
-                          height={20}
-                        />
+            {languages.length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Languages</div>
+                <div className="space-y-1 @2xl:space-y-0">
+                  {languages.map((language) => {
+                    return (
+                      <div
+                        key={language.id}
+                        className="flex items-center gap-x-2"
+                      >
+                        <div className="min-h-5 min-w-5">
+                          <Image
+                            src={`https://api.riccardosacco.com/assets/${language.icon}`}
+                            alt={`${language.language}`}
+                            width={20}
+                            height={20}
+                          />
+                        </div>
+                        <div className="space-x-1">
+                          <span className="font-medium @2xl:text-sm">
+                            {language.language}
+                          </span>
+                          <span className="text-sm text-slate-500 @2xl:text-xs">
+                            ({language.level})
+                          </span>
+                        </div>
                       </div>
-                      <div className="space-x-1">
-                        <span className="font-medium @2xl:text-sm">
-                          {language.language}
-                        </span>
-                        <span className="text-sm text-slate-500 @2xl:text-xs">
-                          ({language.level})
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
+
         <div className="flex items-center justify-center gap-x-2">
           {socials.map((social) => {
             return (
