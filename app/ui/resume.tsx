@@ -165,8 +165,15 @@ export default async function Resume({ id }: ResumeProps) {
                                 <div className="text-lg font-semibold @2xl:text-base">
                                   {experience.title}
                                 </div>
-                                <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
-                                  {experience.company}
+                                <div className="flex items-baseline gap-x-1">
+                                  <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
+                                    {experience.company}
+                                  </div>
+                                  {experience.location ? (
+                                    <div className="text-[11px] text-slate-400">
+                                      ({experience.location})
+                                    </div>
+                                  ) : null}
                                 </div>
                               </div>
                               <div className="text-sm text-slate-500 @2xl:text-right @2xl:text-xs">
