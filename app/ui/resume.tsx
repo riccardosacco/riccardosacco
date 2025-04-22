@@ -349,6 +349,40 @@ export default async function Resume({ id }: ResumeProps) {
               </div>
             )}
 
+            {/* Languages */}
+            {languages.length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Languages</div>
+                <div className="space-y-1 @2xl:space-y-0">
+                  {languages.map((language) => {
+                    return (
+                      <div
+                        key={language.id}
+                        className="flex items-center gap-x-2"
+                      >
+                        <div className="min-h-5 min-w-5">
+                          <Image
+                            src={`https://api.riccardosacco.com/assets/${language.icon}`}
+                            alt={`${language.language}`}
+                            width={20}
+                            height={20}
+                          />
+                        </div>
+                        <div className="space-x-1">
+                          <span className="font-medium @2xl:text-sm">
+                            {language.language}
+                          </span>
+                          <span className="text-sm text-slate-500 @2xl:text-xs">
+                            ({language.level})
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Certifications */}
             {certifications.length > 0 && (
               <div className="space-y-1">
@@ -385,40 +419,6 @@ export default async function Resume({ id }: ResumeProps) {
                             {certification.company}
                           </div>
                           <div className="text-xs text-slate-500">{date}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Languages */}
-            {languages.length > 0 && (
-              <div className="space-y-1">
-                <div className="text-xl font-semibold">Languages</div>
-                <div className="space-y-1 @2xl:space-y-0">
-                  {languages.map((language) => {
-                    return (
-                      <div
-                        key={language.id}
-                        className="flex items-center gap-x-2"
-                      >
-                        <div className="min-h-5 min-w-5">
-                          <Image
-                            src={`https://api.riccardosacco.com/assets/${language.icon}`}
-                            alt={`${language.language}`}
-                            width={20}
-                            height={20}
-                          />
-                        </div>
-                        <div className="space-x-1">
-                          <span className="font-medium @2xl:text-sm">
-                            {language.language}
-                          </span>
-                          <span className="text-sm text-slate-500 @2xl:text-xs">
-                            ({language.level})
-                          </span>
                         </div>
                       </div>
                     );
