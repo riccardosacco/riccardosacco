@@ -152,9 +152,10 @@ export default async function Resume({ id }: ResumeProps) {
                                 <Image
                                   src={`https://api.riccardosacco.com/assets/${experience.icon}`}
                                   alt={`${experience.company}`}
-                                  width={40}
-                                  height={40}
+                                  width={256}
+                                  height={256}
                                   quality={100}
+                                  className="h-10 w-10"
                                 />
                               </a>
                             </div>
