@@ -13,7 +13,23 @@ export async function getResume(resume_id: string) {
 export async function getExperiences(resume_id: string) {
   return await directus.request(
     readItems("experiences", {
-      filter: { resume: { _eq: resume_id }, status: { _eq: "published" } },
+      filter: {
+        resume: { _eq: resume_id },
+        status: { _eq: "published" },
+        company_parent: { _null: true },
+      },
+      sort: ["sort"],
+    }),
+  );
+}
+
+export async function getExperiencesChildren(experience_id: string) {
+  return await directus.request(
+    readItems("experiences", {
+      filter: {
+        company_parent: { _eq: experience_id },
+        status: { _eq: "published" },
+      },
       sort: ["sort"],
     }),
   );
