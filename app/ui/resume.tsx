@@ -58,7 +58,7 @@ export default async function Resume({ id }: ResumeProps) {
                 {resume.firstname} {resume.lastname}
               </div>
 
-              <div className="text-lg font-semibold text-[#FB513B]">
+              <div className="text-lg font-semibold text-[#E42F26]">
                 {resume.headline}
               </div>
             </div>
@@ -118,7 +118,7 @@ export default async function Resume({ id }: ResumeProps) {
             </div>
           </div>
           <div className="flex flex-col items-center justify-between gap-4 @lg:flex-row">
-            <div className="hidden min-h-28 min-w-28 overflow-hidden rounded-full @lg:block">
+            <div className="hidden min-h-20 min-w-20 overflow-hidden rounded-full @lg:block">
               <Image
                 src={`https://api.riccardosacco.com/assets/${resume.image}`}
                 alt={`${resume.firstname} ${resume.lastname}`}
@@ -134,7 +134,7 @@ export default async function Resume({ id }: ResumeProps) {
             )}
           </div>
         </div>
-        <div className="grid flex-1 grid-cols-1 gap-6 @2xl:grid-cols-[7fr_3fr]">
+        <div className="grid flex-1 grid-cols-1 gap-6 @2xl:grid-cols-[8fr_2fr]">
           {/* Left */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -161,18 +161,15 @@ export default async function Resume({ id }: ResumeProps) {
                         experiencesChildrenMap[experience.id] || [];
 
                       return (
-                        <div
-                          key={experience.id}
-                          className="flex items-start gap-x-4"
-                        >
-                          <div className="flex-1">
+                        <div key={experience.id} className="space-x-4">
+                          <div className="flex flex-col justify-between">
                             <div className="flex flex-col justify-between @2xl:flex-row @2xl:items-start">
                               <div>
                                 <div className="text-lg font-semibold @2xl:text-base">
                                   {experience.title}
                                 </div>
                                 <div className="flex items-baseline gap-x-1">
-                                  <div className="text-base font-semibold text-[#FB513B] @2xl:text-sm">
+                                  <div className="text-base font-semibold text-[#E42F26] @2xl:text-sm">
                                     {experience.company}
                                   </div>
                                   {experience.location ? (
@@ -209,7 +206,7 @@ export default async function Resume({ id }: ResumeProps) {
                             </div>
 
                             {experience.description && (
-                              <div className="prose mt-1 text-sm text-slate-600 @2xl:text-xs">
+                              <div className="prose mt-1 max-w-full text-sm text-slate-600 @2xl:text-xs">
                                 {parse(experience.description)}
                               </div>
                             )}
@@ -237,7 +234,7 @@ export default async function Resume({ id }: ResumeProps) {
                                             {child.title}
                                           </div>
                                           <div className="flex items-baseline gap-x-1">
-                                            <div className="text-sm font-semibold text-[#FB513B] @2xl:text-xs">
+                                            <div className="text-sm font-semibold text-[#E42F26] @2xl:text-xs">
                                               {child.company}
                                             </div>
                                             {child.location ? (
@@ -339,48 +336,6 @@ export default async function Resume({ id }: ResumeProps) {
 
           {/* Right */}
           <div className="space-y-2">
-            {/* Skills */}
-            {Object.keys(skillsGrouped).length > 0 && (
-              <div className="space-y-1">
-                <div className="text-xl font-semibold">Skills</div>
-                <div className="space-y-2">
-                  {Object.entries(skillsGrouped).map(([type, skills]) => {
-                    return (
-                      <div key={type}>
-                        <div className="space-y-1 text-base font-semibold capitalize @2xl:text-sm">
-                          {type}
-                        </div>
-                        <div className="space-y-0.5">
-                          {skills.map((skill) => {
-                            return (
-                              <div
-                                key={skill.id}
-                                className="flex items-center gap-x-2"
-                              >
-                                {/* {skill.icon && (
-                                  <div>
-                                    <Image
-                                      src={`https://api.riccardosacco.com/assets/${skill.icon}`}
-                                      alt={`${skill.title}`}
-                                      width={16}
-                                      height={16}
-                                    />
-                                  </div>
-                                )} */}
-
-                                <div className="text-sm text-slate-500 @2xl:text-xs">
-                                  {skill.title}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
             {/* Education */}
             {educations.length > 0 && (
               <div className="space-y-1">
@@ -416,7 +371,7 @@ export default async function Resume({ id }: ResumeProps) {
                           <div className="text-base font-semibold @2xl:text-sm">
                             {education.degree}
                           </div>
-                          <div className="text-sm font-medium text-[#FB513B] @2xl:text-xs">
+                          <div className="text-sm font-medium text-[#E42F26] @2xl:text-xs">
                             {education.school}
                           </div>
                           <div className="text-xs text-slate-500">
@@ -428,6 +383,48 @@ export default async function Resume({ id }: ResumeProps) {
                               </>
                             )}
                           </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {/* Skills */}
+            {Object.keys(skillsGrouped).length > 0 && (
+              <div className="space-y-1">
+                <div className="text-xl font-semibold">Skills</div>
+                <div className="space-y-2">
+                  {Object.entries(skillsGrouped).map(([type, skills]) => {
+                    return (
+                      <div key={type}>
+                        <div className="space-y-1 text-base font-semibold capitalize @2xl:text-sm">
+                          {type}
+                        </div>
+                        <div className="space-y-0.5">
+                          {skills.map((skill) => {
+                            return (
+                              <div
+                                key={skill.id}
+                                className="flex items-center gap-x-2"
+                              >
+                                {/* {skill.icon && (
+                                  <div>
+                                    <Image
+                                      src={`https://api.riccardosacco.com/assets/${skill.icon}`}
+                                      alt={`${skill.title}`}
+                                      width={16}
+                                      height={16}
+                                    />
+                                  </div>
+                                )} */}
+
+                                <div className="text-sm text-slate-500 @2xl:text-xs">
+                                  {skill.title}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     );
