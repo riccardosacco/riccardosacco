@@ -85,19 +85,9 @@ export interface Experience {
 
 export interface Language {
 	/** @primaryKey */
-	id: string;
-	status?: 'published' | 'draft' | 'archived';
-	sort?: number | null;
-	user_created?: DirectusUser | string | null;
-	date_created?: string | null;
-	user_updated?: DirectusUser | string | null;
-	date_updated?: string | null;
-	/** @required */
-	language: string;
-	/** @required */
-	level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | 'Native' | 'Learning';
-	icon?: DirectusFile | string | null;
-	resume?: Resume | string | null;
+	code: string;
+	name?: string | null;
+	direction?: 'ltr' | 'rtl' | null;
 }
 
 export interface Project {
@@ -142,11 +132,19 @@ export interface Resume {
 	location?: string | null;
 	experiences?: Experience[] | string[];
 	education?: Education[] | string[];
-	languages?: Language[] | string[];
 	projects?: Project[] | string[];
 	skills?: Skill[] | string[];
 	social?: Social[] | string[];
 	certifications?: Certification[] | string[];
+	tongues?: Tongue[] | string[];
+	translations?: ResumeTranslation[] | null;
+}
+
+export interface ResumeTranslation {
+	/** @primaryKey */
+	id: number;
+	resume_id?: Resume | string | null;
+	languages_code?: Language | string | null;
 }
 
 export interface Skill {
@@ -178,6 +176,21 @@ export interface Social {
 	name: string;
 	icon?: DirectusFile | string | null;
 	link?: string | null;
+	resume?: Resume | string | null;
+}
+
+export interface Tongue {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	name: string;
+	level?: string | null;
 	resume?: Resume | string | null;
 }
 
@@ -623,8 +636,10 @@ export interface Schema {
 	languages: Language[];
 	projects: Project[];
 	resume: Resume[];
+	resume_translations: ResumeTranslation[];
 	skills: Skill[];
 	social: Social[];
+	tongues: Tongue[];
 	directus_access: DirectusAccess[];
 	directus_activity: DirectusActivity[];
 	directus_collections: DirectusCollection[];
@@ -662,8 +677,10 @@ export enum CollectionNames {
 	languages = 'languages',
 	projects = 'projects',
 	resume = 'resume',
+	resume_translations = 'resume_translations',
 	skills = 'skills',
 	social = 'social',
+	tongues = 'tongues',
 	directus_access = 'directus_access',
 	directus_activity = 'directus_activity',
 	directus_collections = 'directus_collections',

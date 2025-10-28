@@ -9,26 +9,30 @@ import {
   getResume,
   getEducations,
   getExperiences,
-  getLanguages,
   getProjects,
   getSkills,
   getSocials,
   // getCertifications,
   getExperiencesChildren,
+  getTongues,
 } from "@/app/lib/api/resume";
 
 import { FaPhone, FaEnvelope, FaGlobe, FaLocationDot } from "react-icons/fa6";
 
-export type ResumeProps = { id: string };
+export type ResumeProps = { id: string; version?: string; language?: string };
 
-export default async function Resume({ id }: ResumeProps) {
-  const resume = await getResume(id);
+export default async function Resume({
+  id,
+  version,
+  language = "en",
+}: ResumeProps) {
+  const resume = await getResume(id, version);
 
   if (!resume.id) {
     return notFound();
   }
 
-  const experiences = await getExperiences(resume.id);
+  const experiences = await getExperiences(resume.id, version);
   // fetch children for each experience in parallel and map by parent id
   const experiencesChildrenMap: Record<
     string,
@@ -36,15 +40,19 @@ export default async function Resume({ id }: ResumeProps) {
   > = {};
   await Promise.all(
     experiences.map(async (exp) => {
-      experiencesChildrenMap[exp.id] = await getExperiencesChildren(exp.id);
+      experiencesChildrenMap[exp.id] = await getExperiencesChildren(
+        exp.id,
+        version,
+      );
     }),
   );
-  const projects = await getProjects(resume.id);
-  const skills = await getSkills(resume.id);
-  const educations = await getEducations(resume.id);
-  const languages = await getLanguages(resume.id);
-  const socials = await getSocials(resume.id);
-  // const certifications = await getCertifications(resume.id);
+
+  const projects = await getProjects(resume.id, version);
+  const skills = await getSkills(resume.id, version);
+  const educations = await getEducations(resume.id, version);
+  const tongues = await getTongues(resume.id, version);
+  const socials = await getSocials(resume.id, version);
+  // const certifications = await getCertifications(resume.id, version);
 
   const skillsGrouped = groupBy(skills, (skill) => skill.type || "");
 
@@ -141,7 +149,10 @@ export default async function Resume({ id }: ResumeProps) {
               {/* Experiences */}
               {experiences.length > 0 && (
                 <>
-                  <div className="text-xl font-semibold">Experiences</div>
+                  <div className="text-xl font-semibold">
+                    {language === "it" && "Esperienze"}
+                    {language === "en" && "Experiences"}
+                  </div>
                   <div className="space-y-3">
                     {experiences.map((experience) => {
                       const start_date = dayjs(experience.start_date);
@@ -187,20 +198,22 @@ export default async function Resume({ id }: ResumeProps) {
                                   <span>
                                     {end_date
                                       ? end_date.format(date_format)
-                                      : "present"}
+                                      : language === "it"
+                                        ? "presente"
+                                        : "present"}
                                   </span>
                                 </div>
                                 <div className="text-[11px] text-slate-400">
                                   {end_date &&
                                     duration_years > 0 &&
-                                    `${duration_years} year${duration_years > 1 ? "s" : ""}`}
+                                    `${duration_years} ${language === "it" ? (duration_years > 1 ? "anni" : "anno") : (duration_years > 1 ? "years" : "year")}`}
                                   {end_date &&
                                     duration_years > 0 &&
                                     duration_months > 0 &&
                                     " "}
                                   {end_date &&
                                     duration_months > 0 &&
-                                    `${duration_months} month${duration_months > 1 ? "s" : ""}`}
+                                    `${duration_months} ${language === "it" ? (duration_months > 1 ? "mesi" : "mese") : (duration_months > 1 ? "months" : "month")}`}
                                 </div>
                               </div>
                             </div>
@@ -254,20 +267,22 @@ export default async function Resume({ id }: ResumeProps) {
                                             <span>
                                               {cEnd
                                                 ? cEnd.format(date_format)
-                                                : "present"}
+                                                : language === "it"
+                                                  ? "presente"
+                                                  : "present"}
                                             </span>
                                           </div>
                                           <div className="text-[11px] text-slate-400">
                                             {cEnd &&
                                               cDurationYears > 0 &&
-                                              `${cDurationYears} year${cDurationYears > 1 ? "s" : ""}`}
+                                              `${cDurationYears} ${language === "it" ? (cDurationYears > 1 ? "anni" : "anno") : (cDurationYears > 1 ? "years" : "year")}`}
                                             {cEnd &&
                                               cDurationYears > 0 &&
                                               cDurationMonths > 0 &&
                                               " "}
                                             {cEnd &&
                                               cDurationMonths > 0 &&
-                                              `${cDurationMonths} month${cDurationMonths > 1 ? "s" : ""}`}
+                                              `${cDurationMonths} ${language === "it" ? (cDurationMonths > 1 ? "mesi" : "mese") : (cDurationMonths > 1 ? "months" : "month")}`}
                                           </div>
                                         </div>
                                       </div>
@@ -294,7 +309,12 @@ export default async function Resume({ id }: ResumeProps) {
             {projects.length > 0 && (
               <div className="space-y-2">
                 {/* Projects */}
-                <div className="text-xl font-semibold">Projects</div>
+                <div className="text-xl font-semibold">
+                  {" "}
+                  {language === "it" && "Progetti"}
+                  {language === "it" && "Progetti"}
+                  {language === "en" && "Projects"}
+                </div>
                 <div className="space-y-3">
                   {projects.map((project) => {
                     return (
@@ -339,7 +359,10 @@ export default async function Resume({ id }: ResumeProps) {
             {/* Education */}
             {educations.length > 0 && (
               <div className="space-y-1">
-                <div className="text-xl font-semibold">Education</div>
+                <div className="text-xl font-semibold">
+                  {language === "it" && "Educazione"}
+                  {language === "en" && "Education"}
+                </div>
                 <div className="space-y-2">
                   {educations.map((education) => {
                     const start_year = dayjs(education.start_date).format(
@@ -393,7 +416,10 @@ export default async function Resume({ id }: ResumeProps) {
             {/* Skills */}
             {Object.keys(skillsGrouped).length > 0 && (
               <div className="space-y-1">
-                <div className="text-xl font-semibold">Skills</div>
+                <div className="text-xl font-semibold">
+                  {language === "it" && "Competenze"}
+                  {language === "en" && "Skills"}
+                </div>
                 <div className="space-y-2">
                   {Object.entries(skillsGrouped).map(([type, skills]) => {
                     return (
@@ -434,14 +460,17 @@ export default async function Resume({ id }: ResumeProps) {
             )}
 
             {/* Languages */}
-            {languages.length > 0 && (
+            {tongues.length > 0 && (
               <div className="space-y-1">
-                <div className="text-xl font-semibold">Languages</div>
+                <div className="text-xl font-semibold">
+                  {language === "it" && "Lingue"}
+                  {language === "en" && "Languages"}
+                </div>
                 <div className="space-y-1 @2xl:space-y-0">
-                  {languages.map((language) => {
+                  {tongues.map((tongue) => {
                     return (
                       <div
-                        key={language.id}
+                        key={tongue.id}
                         className="flex items-center gap-x-2"
                       >
                         {/* <div className="min-h-5 min-w-5">
@@ -454,10 +483,10 @@ export default async function Resume({ id }: ResumeProps) {
                         </div> */}
                         <div className="space-x-1">
                           <span className="font-medium @2xl:text-sm">
-                            {language.language}
+                            {tongue.name}
                           </span>
                           <span className="text-sm text-slate-500 @2xl:text-xs">
-                            ({language.level})
+                            ({tongue.level})
                           </span>
                         </div>
                       </div>
